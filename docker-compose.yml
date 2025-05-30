@@ -1,0 +1,49 @@
+name: ps_ecommerce
+
+services:
+  mysql:
+    container_name: mysql_db
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - prestahop_network
+
+  prestashop:
+    container_name: prestashop
+    build: .
+    depends_on:
+      - mysql
+    ports:
+      - 8080:80
+    environment:
+      PS_DEV_MODE: 0
+      PS_INSTALL_AUTO: 1
+      PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN}
+      PS_COUNTRY: FR
+      PS_LANGUAGE: fr
+      PS_DOMAIN: localhost:8080
+      DB_SERVER: mysql_db
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWD: ${DB_PASSWORD}
+      ADMIN_MAIL: ${PS_ADMIN_EMAIL}
+      ADMIN_PASSWD: ${PS_ADMIN_PASSWORD}
+    networks:
+      - prestahop_network
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin:latest
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql_db
+    networks:
+      - prestahop_network
+
+networks:
+    prestahop_network:
