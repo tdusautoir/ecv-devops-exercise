@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Download and install theme
+# Download and install develop theme
 RUN cd /var/www/html/themes/ \
     && wget https://github.com/PrestaShop/classic-theme/archive/refs/heads/develop.zip \
     && unzip develop.zip \
